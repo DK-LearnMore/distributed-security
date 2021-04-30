@@ -1,0 +1,56 @@
+server:
+  port: 53023
+
+spring:
+  application:
+    name: gateway-service
+  main:
+    allow-bean-definition-overriding: true
+#注册eureka服务到53022
+eureka:
+  instance:
+    hostname: gateway-service
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:53022/eureka/
+# 网关配置
+zuul:
+  retryable: true
+  ignored-services: '*'
+  add-host-header: true
+  sensitive-headers: '*'
+  # 路由配置
+  routes:
+    uaa-service:
+      # 代理前缀默认会从请求路径中移除，通过该设置关闭移除功能
+      stripPrefix: false
+      #/uaa开头的都由uaa-service服务来处理
+      path: /uaa/**
+    order-service:
+      stripPrefix: false
+      path: /order/**
+# 远程调用,网关远程调用uaa和order
+#feign:
+#  hystrix:
+#    enabled: true
+#  compression:
+#    request:
+#      enabled: true
+#      mime-types[0]: text/xml
+#      mime-types[1]: application/xml
+#      mime-types[2]: application/json
+#      min-request-size: 2048
+#    response:
+#      enabled: true
+logging:
+  level:
+    root: info
+    org.springframwork: info
+
+
+
+
+
+
